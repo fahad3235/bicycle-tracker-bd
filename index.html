@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bicycle Tracker BD - Ride &amp; Maintenance Tracker</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header>
+  <h1 id="appTitle">Bicycle Tracker BD</h1>
+  <p id="appSub" data-i18n="appSub"></p>
+  <button id="langBtn" type="button">Bangla</button>
+</header>
+
+<nav id="tabs" aria-label="Sections">
+  <button type="button" id="tabDashboardBtn" data-tab="dashboard" data-i18n="tabDashboard"></button>
+  <button type="button" id="tabRidesBtn" data-tab="rides" data-i18n="tabRides"></button>
+  <button type="button" id="tabBikesBtn" data-tab="bikes" data-i18n="tabBikes"></button>
+  <button type="button" id="tabMaintenanceBtn" data-tab="maintenance" data-i18n="tabMaintenance"></button>
+  <button type="button" id="tabDataBtn" data-tab="data" data-i18n="tabData"></button>
+</nav>
+
+<p id="msg" role="status" hidden></p>
+
+<main>
+  <section id="secDashboard">
+    <div class="stats">
+      <div class="stat"><span class="stat-label" data-i18n="statsRides"></span><strong id="statRides">0</strong></div>
+      <div class="stat"><span class="stat-label" data-i18n="statsKm"></span><strong id="statKm">0</strong></div>
+      <div class="stat"><span class="stat-label" data-i18n="statsTime"></span><strong id="statTime">0</strong></div>
+      <div class="stat"><span class="stat-label" data-i18n="statsAvgSpeed"></span><strong id="statAvgSpeed">&mdash;</strong></div>
+      <div class="stat"><span class="stat-label" data-i18n="statsMonthKm"></span><strong id="statMonthKm">0</strong></div>
+      <div class="stat"><span class="stat-label" data-i18n="statsSpend"></span><strong id="statSpend"></strong></div>
+      <div class="stat"><span class="stat-label" data-i18n="statsBikes"></span><strong id="statBikes">0</strong></div>
+      <div class="stat"><span class="stat-label" data-i18n="statsLongest"></span><strong id="statLongest">&mdash;</strong></div>
+    </div>
+    <h2 data-i18n="perBikeTitle"></h2>
+    <p id="perBikeEmpty" class="empty" data-i18n="perBikeEmpty"></p>
+    <ul id="perBikeList" class="list"></ul>
+    <h2 data-i18n="dueTitle"></h2>
+    <p id="dueEmpty" class="empty" data-i18n="dueEmpty"></p>
+    <ul id="dueList" class="list"></ul>
+    <h2 data-i18n="recentTitle"></h2>
+    <p id="recentEmpty" class="empty" data-i18n="recentEmpty"></p>
+    <ul id="recentList" class="list"></ul>
+  </section>
+
+  <section id="secRides" hidden>
+    <h2 data-i18n="ridesTitle"></h2>
+    <label>
+      <input type="text" id="rideSearchInput" data-i18n-ph="searchPh" autocomplete="off">
+    </label>
+    <label><span data-i18n="bike"></span>
+      <select id="rideBikeFilter"></select>
+    </label>
+    <p id="rideEmpty" class="empty" data-i18n="ridesEmpty"></p>
+    <ul id="rideList" class="list"></ul>
+
+    <form id="rideForm" novalidate>
+      <h2 id="rideFormTitle" data-i18n="formRideTitle"></h2>
+      <p id="rideErr" class="error" hidden></p>
+      <p id="rideNoBike" class="error" hidden data-i18n="noBikesYet"></p>
+      <label><span data-i18n="bike"></span>
+        <select id="rideBikeSelect"></select>
+      </label>
+      <label><span data-i18n="rideDate"></span>
+        <input type="date" id="rideDateInput">
+      </label>
+      <label><span data-i18n="distance"></span>
+        <input type="number" id="rideDistInput" data-i18n-ph="distancePh" min="0.1" max="500" step="0.1" inputmode="decimal">
+      </label>
+      <label><span data-i18n="minutes"></span>
+        <input type="number" id="rideMinInput" data-i18n-ph="minutesPh" min="1" max="1440" step="1" inputmode="numeric">
+      </label>
+      <label><span data-i18n="route"></span>
+        <input type="text" id="rideRouteInput" data-i18n-ph="routePh" maxlength="80" autocomplete="off">
+      </label>
+      <div class="chips" id="quickPick" aria-label="Common routes"></div>
+      <label><span data-i18n="note"></span>
+        <textarea id="rideNoteInput" data-i18n-ph="notePh" maxlength="200" rows="2"></textarea>
+      </label>
+      <div class="data-row">
+        <button type="submit" id="rideSaveBtn" data-i18n="addBtn"></button>
+        <button type="button" id="rideCancelBtn" data-i18n="cancelBtn" hidden></button>
+      </div>
+    </form>
+  </section>
+
+  <section id="secBikes" hidden>
+    <h2 data-i18n="bikesTitle"></h2>
+    <p id="bikeEmpty" class="empty" data-i18n="bikesEmpty"></p>
+    <ul id="bikeList" class="list"></ul>
+
+    <form id="bikeForm" novalidate>
+      <h2 id="bikeFormTitle" data-i18n="formBikeTitle"></h2>
+      <p id="bikeErr" class="error" hidden></p>
+      <label><span data-i18n="bikeName"></span>
+        <input type="text" id="bikeNameInput" data-i18n-ph="bikeNamePh" maxlength="80" autocomplete="off">
+      </label>
+      <label><span data-i18n="bikeType"></span>
+        <select id="bikeTypeSelect"></select>
+      </label>
+      <label><span data-i18n="brand"></span>
+        <input type="text" id="bikeBrandInput" data-i18n-ph="brandPh" maxlength="60" autocomplete="off">
+      </label>
+      <label><span data-i18n="boughtDate"></span>
+        <input type="date" id="bikeBoughtInput">
+      </label>
+      <label><span data-i18n="startKm"></span>
+        <input type="number" id="bikeStartKmInput" data-i18n-ph="startKmPh" min="0" max="1000000" step="0.1" inputmode="decimal">
+      </label>
+      <div class="data-row">
+        <button type="submit" id="bikeSaveBtn" data-i18n="addBtn"></button>
+        <button type="button" id="bikeCancelBtn" data-i18n="cancelBtn" hidden></button>
+      </div>
+    </form>
+  </section>
+
+  <section id="secMaintenance" hidden>
+    <h2 data-i18n="maintTitle"></h2>
+    <label><span data-i18n="bike"></span>
+      <select id="maintBikeFilter"></select>
+    </label>
+    <p id="maintEmpty" class="empty" data-i18n="maintEmpty"></p>
+    <ul id="maintList" class="list"></ul>
+
+    <form id="maintForm" novalidate>
+      <h2 id="maintFormTitle" data-i18n="formMaintTitle"></h2>
+      <p id="maintErr" class="error" hidden></p>
+      <p id="maintNoBike" class="error" hidden data-i18n="noBikesYet"></p>
+      <label><span data-i18n="bike"></span>
+        <select id="maintBikeSelect"></select>
+      </label>
+      <label><span data-i18n="serviceType"></span>
+        <select id="maintTypeSelect"></select>
+      </label>
+      <label><span data-i18n="serviceDate"></span>
+        <input type="date" id="maintDateInput">
+      </label>
+      <label><span data-i18n="cost"></span>
+        <input type="number" id="maintCostInput" data-i18n-ph="costPh" min="0" max="1000000" step="0.01" inputmode="decimal">
+      </label>
+      <label><span data-i18n="odometerKm"></span>
+        <input type="number" id="maintOdoInput" data-i18n-ph="odometerKmPh" min="0" max="1000000" step="0.1" inputmode="decimal">
+      </label>
+      <label><span data-i18n="nextDueKm"></span>
+        <input type="number" id="maintNextDueInput" data-i18n-ph="nextDueKmPh" min="0" max="1000000" step="0.1" inputmode="decimal">
+      </label>
+      <label><span data-i18n="note"></span>
+        <textarea id="maintNoteInput" data-i18n-ph="notePh" maxlength="200" rows="2"></textarea>
+      </label>
+      <div class="data-row">
+        <button type="submit" id="maintSaveBtn" data-i18n="addBtn"></button>
+        <button type="button" id="maintCancelBtn" data-i18n="cancelBtn" hidden></button>
+      </div>
+    </form>
+  </section>
+
+  <section id="secData" hidden>
+    <h2 data-i18n="dataTitle"></h2>
+    <p class="muted" data-i18n="dataText"></p>
+    <div class="data-row">
+      <button type="button" id="exportBtn" data-i18n="exportBtn"></button>
+      <label class="file-label"><span data-i18n="importBtn"></span>
+        <input type="file" id="importFile" accept="application/json,.json">
+      </label>
+      <button type="button" id="eraseBtn" class="danger" data-i18n="eraseBtn"></button>
+    </div>
+    <textarea id="exportOut" rows="8" hidden readonly data-i18n-ph="exportPh"></textarea>
+  </section>
+</main>
+
+<footer>
+  <p data-i18n="footerNote"></p>
+</footer>
+
+<script src="js/logic.js"></script>
+<script src="js/data.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
